@@ -1,4 +1,5 @@
 package adventure
+
 import adventure.*
 import akka.actor.{Actor, ActorLogging, ActorRef, ActorSystem.*}
 import scala.concurrent.duration._
@@ -9,9 +10,11 @@ class Controller extends Actor with ActorLogging {
     self,
     Timeout
   ) // Will be reset after every process has been completed
+
   var cache = Set.empty[String] // holds the cached results of the visited urls
   var children =
     Set.empty[ActorRef] // keeps track of all the child actors created
+
   def receive = {
     case Check(url, depth) =>
       log.debug(
@@ -24,18 +27,21 @@ class Controller extends Actor with ActorLogging {
           Props(new Getter(url, depth - 1))
         ) // otherwise, create a new getter  and tell it about the url to fetch, decreasing the depth by 1
       cache += url // append the visited url to the cache
+
     case Getter.Done =>
       children -= sender // once the getter is done, we remove it from the children set
       if (children.isEmpty)
         context.parent ! Result(
           cache
         ) // Once no getter is there anymore, we know that the whole process is fin ished an we tell the parent the results
+
     case Timeout => children foreach (_ ! Getter.Abort)
   }
 }
 
 class Cache extends Actor {
   var cache = Map.empty[String, String]
+
   def receive: Actor.Receive = {
     case Get(url) =>
       if (cache contains url) sende ! cache(url)
@@ -43,6 +49,7 @@ class Cache extends Actor {
         val client = sender 
         WebClient get url map (Result(sender, url, _)) pipeTo self
       }
+
     case Result(client, url, body) =>
       cache += url -> body
       client ! body
