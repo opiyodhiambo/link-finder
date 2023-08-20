@@ -5,7 +5,11 @@ import scala.concurrent.duration._
 import akka.actor.ActorSystem.*
 
 class Controller extends Actor with ActorLogging {
-  context.system.scheduler.scheduleOnce(10.seconds, self, Timeout) // Will be reset after every process has been completed
+  context.system.scheduler.scheduleOnce(
+    10.seconds,
+    self,
+    Timeout
+  ) // Will be reset after every process has been completed
   var cache = Set.empty[String] // holds the cached results of the visited urls
   var children =
     Set.empty[ActorRef] // keeps track of all the child actors created
@@ -33,14 +37,14 @@ class Controller extends Actor with ActorLogging {
 
 class Cache extends Actor {
   var cache = Map.empty[String, String]
-  def receive: Actor.Receive= {
+  def receive: Actor.Receive = {
     case Get(url) =>
       if (cache contains url) sende ! cache(url)
       else
-        WebClient get url foreach {
-          body => 
-            cache += url -> body 
-            sender ! body
-        }
+        WebClient get url map (Result(sender, url, _)) pipeTo self
+    case Result(client, url, body) =>
+      cache += url -> body
+      client ! body
+
   }
 }
