@@ -5,7 +5,7 @@ import scala.concurrent.duration._
 import akka.actor.ReceiveTimeout
 
 class Controller extends Actor with ActorLogging {
-  context.setReceiveTimeout(10.seconds)
+  context.setReceiveTimeout(10.seconds) // Will be reset after every process has been completed
   var cache = Set.empty[String] // holds the cached results of the visited urls
   var children =
     Set.empty[ActorRef] // keeps track of all the child actors created
