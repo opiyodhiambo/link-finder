@@ -3,7 +3,7 @@ import adventure.*
 import akka.actor.{Actor, ActorLogging, ActorRef}
 
 class Controller extends Actor with ActorLogging {
-  var cache = Set.empty[String] // holds the cached results of the visited strings
+  var cache = Set.empty[String] // holds the cached results of the visited urls
   var children = Set.empty[ActorRef] //keeps track of all the child actors created 
   def receive = {
     case Check(url, depth) =>
