@@ -2,10 +2,10 @@ package adventure
 import adventure.*
 import akka.actor.{Actor, ActorLogging, ActorRef}
 import scala.concurrent.duration._
-import akka.actor.ReceiveTimeout
+import akka.actor.ActorSystem.*
 
 class Controller extends Actor with ActorLogging {
-  context.setReceiveTimeout(10.seconds) // Will be reset after every process has been completed
+  context.system.scheduler.scheduleOnce(10.seconds, self, Timeout) // Will be reset after every process has been completed
   var cache = Set.empty[String] // holds the cached results of the visited urls
   var children =
     Set.empty[ActorRef] // keeps track of all the child actors created
@@ -27,6 +27,20 @@ class Controller extends Actor with ActorLogging {
         context.parent ! Result(
           cache
         ) // Once no getter is there anymore, we know that the whole process is fin ished an we tell the parent the results
-    case ReceiveTimeout => children foreach(_ ! Getter.Abort)
+    case Timeout => children foreach (_ ! Getter.Abort)
+  }
+}
+
+class Cache extends Actor {
+  var cache = Map.empty[String, String]
+  def receive: Actor.Receive= {
+    case Get(url) =>
+      if (cache contains url) sende ! cache(url)
+      else
+        WebClient get url foreach {
+          body => 
+            cache += url -> body 
+            sender ! body
+        }
   }
 }
