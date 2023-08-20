@@ -7,6 +7,7 @@ import org.scalatest.wordspec.AnyWordSpecLike
 object ReceptionistSpec {
   class FakeController extends Actor {
     import context.dispatcher
+
     def receive = { case Controller.Check(url, depth) =>
       context.system.scheduler.scheduleOnce(1.second, sender, Controller.Result(Set(url)))
     }
@@ -27,7 +28,6 @@ class ReceptionistSpec
   import Receptionist._
 
   override def afterAll(): Unit = {
-
     "A Receptionist" must {
 
       "reply with a result" in {
