@@ -4,13 +4,13 @@ import akka.actor.Actor
 import adventure.*
 import akka.actor.Status
 import akka.io.Tcp.Abort
+import java.util.concurrent.Executor
+import scala.concurrent.ExecutionContext
 
 class Getter(url: String, depth: Int) extends Actor { // takes the url to visit and the depth of the link
-  implicit val exec = context.dispatcher
-  val future = WebClient.get(
-    url
-  ) // Fetch the link using the WebClient and gives us back a future
-  WebClient get url pipeTo self // send message to the actor when future is complete
+  implicit val executor = context.dispatcher.asInstanceOf[Executor with ExecutionContext]
+  def client: WebClient = AsyncWebClient
+  client get url pipeTo self // send message to the actor when future is complete
 
   def receive = {
     case body: String =>
@@ -21,7 +21,7 @@ class Getter(url: String, depth: Int) extends Actor { // takes the url to visit 
         ) // Check the links and send the message to the parent actor
       stop() // The actor then stops, a method defined below
     case _: Status.Failure => stop()
-    case Abort => stop()
+    case Abort             => stop()
   }
   def stop(): Unit = {
     context.parent ! Done
