@@ -40,8 +40,10 @@ class Cache extends Actor {
   def receive: Actor.Receive = {
     case Get(url) =>
       if (cache contains url) sende ! cache(url)
-      else
+      else{
+        val client = sender 
         WebClient get url map (Result(sender, url, _)) pipeTo self
+      }
     case Result(client, url, body) =>
       cache += url -> body
       client ! body
