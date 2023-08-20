@@ -3,8 +3,13 @@ package adventure
 import org.jsoup.Jsoup // for parsing html text
 import scala.collection.JavaConverters._
 import scala.concurrent.Future
+import java.util.concurrent.Executor
 
-class WebClient {
+trait WebClient {
+  def get(url: String)(implicit exec: Executor): Future[String]
+}
+
+object AcyncWebClient extends WebClient {
   private val client = new AsyncHttpClient // an instance used to make asynchronous HTTP requests 
   def get (url: String)(implicit exec: Executor): Future[String] = {
     val f = client.prepareGet(url).execute(); // prepareGet prepares the requests, while execute sends the request
