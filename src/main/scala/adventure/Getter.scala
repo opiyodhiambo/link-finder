@@ -20,9 +20,12 @@ class Getter(url: String, depth: Int) extends Actor { // takes the url to visit 
           depth
         ) // Check the links and send the message to the parent actor
       stop() // The actor then stops, a method defined below
+
     case _: Status.Failure => stop()
+
     case Abort             => stop()
   }
+
   def stop(): Unit = {
     context.parent ! Done
     context.stop(self)
