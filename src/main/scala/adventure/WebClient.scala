@@ -2,6 +2,7 @@ package adventure
 
 import org.jsoup.Jsoup // for parsing html text
 import scala.collection.JavaConverters._
+import scala.concurrent.Future
 
 class WebClient {
   private val client = new AsyncHttpClient // an instance used to make asynchronous HTTP requests 
