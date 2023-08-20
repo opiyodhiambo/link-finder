@@ -20,5 +20,6 @@ libraryDependencies ++= Seq(
   "ch.qos.logback" % "logback-classic" % "1.2.11",
   "com.typesafe.akka" %% "akka-actor-testkit-typed" % akkaVersion % Test cross CrossVersion.for3Use2_13,
   "org.scalatest" %% "scalatest" % "3.1.4" % Test cross CrossVersion.for3Use2_13,
-  "com.ning" % "async-http-client" % "1.7.19" 
+  "com.ning" %% "async-http-client" % "1.7.19",
+  "org.jsoup" %% "jsoup" % "1.8.1"
 )
