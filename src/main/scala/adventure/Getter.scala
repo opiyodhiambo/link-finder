@@ -1,4 +1,6 @@
   package adventure
+  import com.ning.AsyncHttpClient
+
 
   private val client = new AsyncHttpClient // an instance used to make asynchronous HTTP requests 
   def get (url: String)(implicit exec: Executor): Future[String] = {
@@ -15,3 +17,7 @@
     p.future // Getting a future from a promise
 
 }
+
+// FINDING LINKS
+import org.jsoup.Jsoup 
+import import scala.collection.JavaConterters._
