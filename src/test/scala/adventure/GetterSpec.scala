@@ -1,4 +1,6 @@
 import akka.actor.Props
+import akka.actor.ActorRef
+import akka.actor.Actor
 val firstLink = "http://www.adventure.info/1"
 
 val bodies = Map(
@@ -25,3 +27,10 @@ def fakeGetter(url: String, depth: Int): Props =
   Props(new Getter(url, depth) {
     override def client = FakeWebClient
   })
+
+class StepParent(child: Props, probe: ActorRef) extends Actor {
+  context.actorOf(child, "child")\
+  def receive: Actor.Receive = {
+    case msg => probe.tell(msg, sender)
+  }
+}
