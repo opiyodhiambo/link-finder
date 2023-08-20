@@ -1,6 +1,10 @@
 import akka.actor.Props
 import akka.actor.ActorRef
 import akka.actor.Actor
+import akka.testkit.TestKit
+import org.scalatest.wordspec.AnyWordSpecLike
+import akka.testkit.ImplicitSender
+import scala.annotation.meta.getter
 val firstLink = "http://www.adventure.info/1"
 
 val bodies = Map(
@@ -34,3 +38,24 @@ class StepParent(child: Props, probe: ActorRef) extends Actor {
     case msg => probe.tell(msg, sender)
   }
 }
+
+class GetterSpec extends TestKit(ActorSystem("GetterSpec")) with AnyWordSpecLike with BeforeAndAfterAll with ImplicitSender {
+  import GetterSpec._
+  override def afterAll(): Unit = {
+    system.shutdown()
+  }
+
+  "A Getter" must {
+    "return the right body" in {
+      val getter = system.actorOf(Props(new Parent(fakeGetter(firstLink, 2). testActor)), "rightBody")
+      for (link <- links(firstLink))
+        expectMsg(Controller.Check(link, 2))
+      expectMsg(Getter.Done)
+    }
+    "Properly finish in case of errors" in {
+      val getter = system.actorOf(Props(new Parent(fakeGetter("unknown", 2), testActor)), "wrongLink")
+      expectMsg(Getter.Done)
+    }
+  }
+
+  }
