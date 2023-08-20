@@ -1,3 +1,4 @@
+import akka.actor.Props
 val firstLink = "http://www.adventure.info/1"
 
 val bodies = Map(
@@ -19,3 +20,8 @@ object FakeWebClient extends WebClient {
       case Some(body) => Future.successful(body)
     }
 }
+
+def fakeGetter(url: String, depth: Int): Props = 
+  Props(new Getter(url, depth) {
+    override def client = FakeWebClient
+  })
