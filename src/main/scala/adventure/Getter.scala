@@ -8,7 +8,7 @@ import java.util.concurrent.Executor
 import scala.concurrent.ExecutionContext
 
 class Getter(url: String, depth: Int) extends Actor { // takes the url to visit and the depth of the link
-  implicit val executor = context.dispatcher.asInstanceOf[Executor with ExecutionContext]
+  implicit val executor: ExecutionContext = context.dispatcher.asInstanceOf[Executor with ExecutionContext]
   def client: WebClient = AsyncWebClient
   client get url pipeTo self // send message to the actor when future is complete
 
