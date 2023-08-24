@@ -2,7 +2,9 @@ package adventure
 
 import adventure.*
 import akka.actor.{Actor, ActorLogging, ActorRef, ActorSystem}
-import scala.concurrent.duration._
+import scala.concurrent.duration.*
+
+case object Timeout 
 
 class Controller extends Actor with ActorLogging {
   context.system.scheduler.scheduleOnce(
