@@ -3,6 +3,7 @@ import akka.actor.{Actor, Props}
 import adventure.*
 import akka.actor.ReceiveTimeout
 import concurrent.duration.DurationInt
+import adventure.WebClient
 
 class Main extends Actor {
   val receptionist = context.actorOf(Props[Receptionist], "receptionist")
@@ -15,8 +16,8 @@ class Main extends Actor {
 
   context.setReceiveTimeout(10.seconds)
   def receive: Actor.Receive = {
-    case Result(url, set) =>
-      println(set.toVector.sorted.mkString(s"Results for '$url':\n", "\n", "\n"))
+    case Result(set) =>
+      println(set.toVector.sorted.mkString("Results:\n", "\n", "\n"))
 
     case Failed(url) =>
       println(s"Failed to fetch '$url'\n")
@@ -25,7 +26,7 @@ class Main extends Actor {
       context.stop(self)
   }
 
-  override def postStop(): Unit = {
-    WebClient.shutdown()
-  }
+  // override def postStop(): Unit = {
+  //   WebClient.shutdown()
+  
 }
