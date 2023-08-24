@@ -8,6 +8,8 @@ import java.util.concurrent.Executor
 import scala.concurrent.ExecutionContext
 import akka.Done
 import akka.actor.TypedActor.dispatcher
+import akka.pattern.pipe
+import akka.actor.{ActorRef, Props}
 
 object Getter {
   case object Done
@@ -21,8 +23,8 @@ class Getter(url: String, depth: Int) extends Actor { // takes the url to visit 
 
   def receive = {
     case body: String =>
-      for (link <- findLinks(body)) // get the links using the findLinks method in the WebClient class
-        context.parent ! Controller.Check(
+      for (link <- AsyncWebClient.findLinks(body)) // get the links using the findLinks method in the WebClient class
+        context.parent ! Check(
           link,
           depth
         ) // Check the links and send the message to the parent actor
