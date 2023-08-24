@@ -4,9 +4,10 @@ import adventure.*
 import akka.actor.{Actor, ActorLogging, ActorRef, ActorSystem}
 import scala.concurrent.duration.*
 import akka.util.Timeout 
+import scala.concurrent.ExecutionContext
 
 class Controller extends Actor with ActorLogging {
-  implicit val executionContext = context.system.dispatcher 
+  implicit val executionContext: ExecutionContext = context.system.dispatcher 
 
   context.system.scheduler.scheduleOnce(
     10.seconds,
