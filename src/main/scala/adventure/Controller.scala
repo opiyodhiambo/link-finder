@@ -5,6 +5,8 @@ import akka.actor.{Actor, ActorLogging, ActorRef, ActorSystem}
 import scala.concurrent.duration.*
 import akka.util.Timeout 
 import scala.concurrent.ExecutionContext
+import akka.actor.Props
+
 
 case class Check(url: String, depth: Int)
 
@@ -29,9 +31,8 @@ class Controller extends Actor with ActorLogging {
         url
       ) // Log every check request at debug level
       if (!cache(url) && depth > 0) // if the cache already has the url, or has a max depth of zero, nothing is done
-        children += context.actorOf(
-          Props(new Getter(url, depth - 1))
-        ) // otherwise, create a new getter  and tell it about the url to fetch, decreasing the depth by 1
+        val newGetter = context.actorOf(Props(new Getter(url, depth -1)))
+        children = children + newGetter// otherwise, create a new getter  and tell it about the url to fetch, decreasing the depth by 1
       cache += url // append the visited url to the cache
 
     case Getter.Done =>
