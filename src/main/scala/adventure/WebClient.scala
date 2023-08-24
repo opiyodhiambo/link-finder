@@ -37,7 +37,7 @@ object AsyncWebClient extends WebClient {
   }
 
   def findLinks(body: String): Iterator[String] = {
-    val document = Jsoup.parse(body, url) // a document is a scala representation of the html syntax
+    val document = Jsoup.parse(body) // a document is a scala representation of the html syntax
     val links = document.select("a[href]") // anchor tags with href attributes
 
     for {
