@@ -20,9 +20,9 @@ class Receptionist extends Actor {
       context.become(enqueueJob(queue, Job(sender, url)))
 
     // Upon Controller.Results, shot ot tp the client and run that to the next job from queue if any
-    case Controller.Result(links) =>
+    case Result(links) =>
       val job = queue.head
-      job.client ! Result(job.url, links)
+      job.client ! Result(links)
       context.stop(sender)
       context.become(runNext(queue.tail))
   }
@@ -35,7 +35,7 @@ class Receptionist extends Actor {
     if (queue.isEmpty) waiting // when the job queue is empty, the receptionist waits
     else {
       val controller = context.actorOf(Props[Controller], s"c$reqNo") // Otherwise, we instantiate a new controller
-      controller ! Controller.Check(queue.head.url, 2) // then delegate the task, which is to check the link
+      controller ! Check(queue.head.url, 2) // then delegate the task, which is to check the link
       running(queue) // then we transition into the running state
     }
   }
