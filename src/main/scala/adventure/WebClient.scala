@@ -2,7 +2,7 @@ package adventure
 
 import org.jsoup.Jsoup // for parsing html text
 import scala.collection.JavaConverters._
-import scala.concurrent.Future
+import scala.concurrent.{Future, Promise}
 import java.util.concurrent.Executor
 import scala.runtime.stdLibPatches.language.future
 import org.asynchttpclient.AsyncHttpClient
@@ -10,6 +10,7 @@ import org.asynchttpclient.AsyncHttpClient
 trait WebClient {
   def get(url: String)(implicit exec: Executor): Future[String]
 }
+case class BadStatus(statusCode: Int) extends RuntimeException(s"Bad Status Code: $statusCode")
 
 object AsyncWebClient extends WebClient {
   private val client = new AsyncHttpClient // an instance used to make asynchronous HTTP requests
