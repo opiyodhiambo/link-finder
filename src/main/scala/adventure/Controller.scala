@@ -6,6 +6,8 @@ import scala.concurrent.duration.*
 import akka.util.Timeout 
 import scala.concurrent.ExecutionContext
 
+case class Check(url, depth)
+
 class Controller extends Actor with ActorLogging {
   implicit val executionContext: ExecutionContext = context.system.dispatcher 
 
