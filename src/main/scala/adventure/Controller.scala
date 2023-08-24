@@ -31,9 +31,10 @@ class Controller extends Actor with ActorLogging {
         depth,
         url
       ) // Log every check request at debug level
-      if (!cache(url) && depth > 0) // if the cache already has the url, or has a max depth of zero, nothing is done
-        val newGetter = context.actorOf(Props(new Getter(url, depth -1)))
+      if (!cache(url) && depth > 0){ // if the cache already has the url, or has a max depth of zero, nothing is done
+        val newGetter = context.actorOf(Props(new Getter(url, depth - 1)))
         children = children + newGetter// otherwise, create a new getter  and tell it about the url to fetch, decreasing the depth by 1
+      }
       cache += url // append the visited url to the cache
 
     case Getter.Done =>
