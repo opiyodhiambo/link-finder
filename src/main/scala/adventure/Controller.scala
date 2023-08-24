@@ -1,7 +1,7 @@
 package adventure
 
 import adventure.*
-import akka.actor.{Actor, ActorLogging, ActorRef, ActorSystem.*}
+import akka.actor.{Actor, ActorLogging, ActorRef, ActorSystem}
 import scala.concurrent.duration._
 
 class Controller extends Actor with ActorLogging {
