@@ -2,6 +2,7 @@ package adventure
 import adventure.*
 import akka.actor.Actor
 import akka.actor.Props
+import akka.actor.ActorRef
 
 case class Get(url: String)
 case class Failed(url: String)
