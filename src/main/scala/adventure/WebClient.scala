@@ -5,12 +5,13 @@ import scala.collection.JavaConverters._
 import scala.concurrent.Future
 import java.util.concurrent.Executor
 import scala.runtime.stdLibPatches.language.future
+import org.asynchttpclient.AsyncHttpClient
 
 trait WebClient {
   def get(url: String)(implicit exec: Executor): Future[String]
 }
 
-object AcyncWebClient extends WebClient {
+object AsyncWebClient extends WebClient {
   private val client = new AsyncHttpClient // an instance used to make asynchronous HTTP requests
 
   def get(url: String)(implicit exec: Executor): Future[String] = {
