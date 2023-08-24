@@ -6,6 +6,7 @@ import scala.concurrent.{Future, Promise}
 import java.util.concurrent.Executor
 import scala.runtime.stdLibPatches.language.future
 import org.asynchttpclient.AsyncHttpClient
+import org.asynchttpclient.DefaultAsyncHttpClient
 
 trait WebClient {
   def get(url: String)(implicit exec: Executor): Future[String]
@@ -14,7 +15,7 @@ trait WebClient {
 case class BadStatus(statusCode: Int) extends RuntimeException(s"Bad Status Code: $statusCode")
 
 object AsyncWebClient extends WebClient {
-  private val client = new AsyncHttpClient // an instance used to make asynchronous HTTP requests
+  private val client: AsyncHttpClient = new DefaultAsyncHttpClient()// an instance used to make asynchronous HTTP requests
 
   def get(url: String)(implicit exec: Executor): Future[String] = {
     val f = client.prepareGet(url).execute(); // prepareGet prepares the requests, while execute sends the request
@@ -22,7 +23,7 @@ object AsyncWebClient extends WebClient {
 
     f.addListener(
       new Runnable { // Listener added to the ListenableFuture and will be runned when the future is completed.
-        def run = { // a method describing what will happen when the future is complete
+        def run(): Unit = { // a method describing what will happen when the future is complete
           val response = f.get // f.get will not be blocked because the future has been completed
           if (response.getStatusCode < 400)
             p.success(
