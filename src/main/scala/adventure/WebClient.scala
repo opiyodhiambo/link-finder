@@ -25,7 +25,7 @@ object AsyncWebClient extends WebClient {
           val response = f.get // f.get will not be blocked because the future has been completed
           if (response.getStatusCode < 400)
             p.success(
-              response.getResponseBodyExcerpt(131072)
+              response.getResponseBody()
             ) // If the status code is less than 400 (indicating success), it completes the promise
           else p.failure(BadStatus(response.getStatusCode)) // Otherwise, the promise fails with s BadStatsCode
         }
