@@ -2,6 +2,7 @@ package adventure
 import akka.actor.{Actor, Props}
 import adventure.*
 import akka.actor.ReceiveTimeout
+import concurrent.duration.DurationInt
 
 class Main extends Actor {
   val receptionist = context.actorOf(Props[Receptionist], "receptionist")
