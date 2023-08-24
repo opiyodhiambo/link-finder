@@ -9,6 +9,7 @@ import org.asynchttpclient.AsyncHttpClient
 
 trait WebClient {
   def get(url: String)(implicit exec: Executor): Future[String]
+  def findLinks(body: String): Iterator[String]
 }
 case class BadStatus(statusCode: Int) extends RuntimeException(s"Bad Status Code: $statusCode")
 
