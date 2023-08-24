@@ -3,15 +3,16 @@ package adventure
 import adventure.*
 import akka.actor.{Actor, ActorLogging, ActorRef, ActorSystem}
 import scala.concurrent.duration.*
-
-case object Timeout 
+import akka.util.Timeout 
 
 class Controller extends Actor with ActorLogging {
+  implicit val executionContext = context.system.dispatcher 
+
   context.system.scheduler.scheduleOnce(
     10.seconds,
     self,
     Timeout
-  ) // Will be reset after every process has been completed
+  )(executionContext) // Will be reset after every process has been completed
 
   var cache = Set.empty[String] // holds the cached results of the visited urls
   var children =
