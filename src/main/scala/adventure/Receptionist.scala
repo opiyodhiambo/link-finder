@@ -2,6 +2,9 @@ package adventure
 import adventure.*
 import akka.actor.Actor
 import akka.actor.Props
+import akka.actor.ActorRef
+
+case class Get(url: String)
 
 class Receptionist extends Actor {
   def receive: Actor.Receive = waiting
