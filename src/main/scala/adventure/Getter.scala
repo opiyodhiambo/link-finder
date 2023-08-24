@@ -6,6 +6,13 @@ import akka.actor.Status
 import akka.io.Tcp.Abort
 import java.util.concurrent.Executor
 import scala.concurrent.ExecutionContext
+import akka.Done
+import akka.actor.TypedActor.dispatcher
+
+object Getter {
+  case object Done
+  case object Abort
+}
 
 class Getter(url: String, depth: Int) extends Actor { // takes the url to visit and the depth of the link
   implicit val executor: ExecutionContext = context.dispatcher.asInstanceOf[Executor with ExecutionContext]
