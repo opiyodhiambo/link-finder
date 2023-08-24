@@ -47,20 +47,4 @@ class Controller extends Actor with ActorLogging {
   }
 }
 
-class Cache extends Actor {
-  var cache = Map.empty[String, String]
 
-  def receive: Actor.Receive = {
-    case Get(url) =>
-      if (cache contains url) sende ! cache(url)
-      else{
-        val client = sender 
-        WebClient get url map (Result(sender, url, _)) pipeTo self
-      }
-
-    case Result(client, url, body) =>
-      cache += url -> body
-      client ! body
-
-  }
-}
