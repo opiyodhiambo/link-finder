@@ -9,6 +9,7 @@ import akka.actor.Props
 
 
 case class Check(url: String, depth: Int)
+case class Result(cache: Set[String]) 
 
 class Controller extends Actor with ActorLogging {
   implicit val executionContext: ExecutionContext = context.system.dispatcher 
