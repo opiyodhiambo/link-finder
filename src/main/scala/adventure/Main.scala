@@ -16,8 +16,8 @@ class Main extends Actor {
 
   context.setReceiveTimeout(10.seconds)
   def receive: Actor.Receive = {
-    case Result(set) =>
-      println(set.toVector.sorted.mkString("Results:\n", "\n", "\n"))
+    case Result(cache) =>
+      println(cache.toVector.sorted.mkString("Results:\n", "\n", "\n"))
 
     case Failed(url) =>
       println(s"Failed to fetch '$url'\n")
